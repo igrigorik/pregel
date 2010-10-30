@@ -79,7 +79,6 @@ describe Coordinator do
         PageRankVertex.new(:google,     1,  :google)
       ]
 
-
       c = Coordinator.new(graph)
       c.run
 

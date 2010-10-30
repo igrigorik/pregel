@@ -14,7 +14,7 @@ module Pregel
       block_given? ? @outedges.each {|e| yield e} : @outedges
     end
 
-    def compute; raise "undefined compute function"; end
+    def compute; end
 
     def halt; @active = false; end
     def active?; @active; end

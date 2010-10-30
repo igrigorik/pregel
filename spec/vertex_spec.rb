@@ -47,16 +47,10 @@ describe Vertex do
     v.value.should == 20
   end
 
-  it 'should be able to send messages' do
-    class V < Vertex
-      def compute
-        deliver(:a, :b)
-      end
-    end
-
-    lambda do
-      v = V.new(:a, 10)
-      v.compute
-    end.should_not raise_error
+  it 'should have an inbox for incoming messages' do
+    v.messages.size.should == 0
+    v.messages = [:a, :b]
+    v.messages.size.should == 2
   end
+
 end

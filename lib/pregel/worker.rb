@@ -10,6 +10,11 @@ module Pregel
 
     def superstep
       Thread.new do
+        @vertices.each do |v|
+          v.messages = PostOffice.instance.read(v.id)
+          v.active! if v.messages.size > 0
+        end
+
         active = @vertices.select {|v| v.active?}
         active.each {|v| v.step}
 

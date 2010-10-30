@@ -18,6 +18,20 @@ describe Worker do
     lambda { Worker.new([]) }.should raise_error
   end
 
+  it 'should partition graphs with variable worker sizes' do
+    graph = [
+      Vertex.new(:igvita,     1,  :wikipedia),
+      Vertex.new(:wikipedia,  2,  :google),
+      Vertex.new(:google,     1,  :wikipedia)
+    ]
+
+    c = Coordinator.new(graph)
+    c.workers.size.should == 1
+
+    c = Coordinator.new(graph, partitions: 2)
+    c.workers.size.should == 2
+  end
+
   it 'should execute an async superstep' do
     # TODO: simulate async message delivery to worker by returning
     # a thread per message
@@ -35,18 +49,13 @@ describe Worker do
     worker.active.should > 0
   end
 
-  # it 'should partition graphs with variable worker sizes' do
-  #   graph = [
-  #     Vertex.new(:igvita,     1,  :wikipedia),
-  #     Vertex.new(:wikipedia,  2,  :google),
-  #     Vertex.new(:google,     1,  :wikipedia)
-  #   ]
-  #
-  #   c = Coordinator.new(graph)
-  #   c.workers.size.should == 1
-  #
-  #   c = Coordinator.new(graph, partitions: 2)
-  #   c.workers.size.should == 2
-  # end
+  it 'should deliver messages to vertices at beginning of each superstep' do
+    PostOffice.instance.deliver(:igvita, 'hello')
+    worker.superstep.join
+
+    ig = worker.vertices.find {|v| v.id == :igvita }
+    ig.messages.size.should == 1
+    ig.messages.first.should == 'hello'
+  end
 
 end

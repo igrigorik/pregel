@@ -36,14 +36,14 @@ describe Coordinator do
     pending
 
     class PageRankVertex < Vertex
-      def compute(msgs)
+      def compute
         if superstep >= 1
-          sum = msgs.collect(0) {|total,msg| total += msg; total }
+          sum = messages.collect(0) {|total,msg| total += msg; total }
           @value = (0.15 / 3) + 0.85 * sum
         end
 
         if superstep < 30
-          send_to_all_neighbors(@value / neighbors.size)
+          deliver_to_all_neighbors(@value / neighbors.size)
         else
           halt
         end

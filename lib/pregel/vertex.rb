@@ -1,12 +1,13 @@
 module Pregel
   class Vertex
     attr_reader :id
-    attr_accessor :value
+    attr_accessor :value, :messages
 
     def initialize(id, value, *outedges)
       @id = id
       @value = value
       @outedges = outedges
+      @messages = []
       @active = true
       @superstep = 0
     end
@@ -20,7 +21,6 @@ module Pregel
     end
 
     def deliver(to, msg)
-      p [:deliver_to, to, msg]
       PostOffice.instance.deliver(to, msg)
     end
 
@@ -29,12 +29,13 @@ module Pregel
       compute
     end
 
-    def compute; end
+    def halt;     @active = false;  end
+    def active!;  @active = true;   end
+    def active?;  @active;          end
 
-    def halt; @active = false; end
-    def active?; @active; end
     def superstep; @superstep; end
     def neighbors; @outedges; end
 
+    def compute; end
   end
 end

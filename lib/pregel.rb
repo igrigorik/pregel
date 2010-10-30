@@ -8,7 +8,7 @@ class PostOffice
   include Singleton
 
   def initialize
-    @mailboxes = Hash.new([])
+    @mailboxes = Hash.new
     @mutex = Mutex.new
   end
 
@@ -24,10 +24,9 @@ class PostOffice
 
   def read(box)
     @mutex.synchronize do
-      msgs = @mailboxes[box]
+      msgs = @mailboxes[box] || []
       @mailboxes.clear
+      msgs
     end
-
-    msgs
   end
 end

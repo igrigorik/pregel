@@ -11,7 +11,7 @@ module Pregel
     def superstep
       Thread.new do
         active = @vertices.select {|v| v.active?}
-        active.each {|v| v.compute}
+        active.each {|v| v.step}
 
         @active = active.select {|v| v.active?}.size
       end

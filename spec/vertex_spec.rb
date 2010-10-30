@@ -20,6 +20,12 @@ describe Vertex do
     v.value.should == 20
   end
 
+  it 'should keep track of the current superstep' do
+    v.superstep.should == 0
+    v.step
+    v.superstep.should == 1
+  end
+
   it 'should allow iterating over out-edges' do
     v.edges.size.should == 2
     v.edges.each {|e| [:b, :c].should include e }

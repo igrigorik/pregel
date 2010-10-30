@@ -24,9 +24,7 @@ class PostOffice
 
   def read(box)
     @mutex.synchronize do
-      msgs = @mailboxes[box] || []
-      @mailboxes.clear
-      msgs
+      @mailboxes.delete(box) || []
     end
   end
 end

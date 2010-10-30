@@ -33,12 +33,11 @@ describe Coordinator do
   end
 
   it 'should perform simple PageRank calculation on the graph' do
-    pending
 
     class PageRankVertex < Vertex
       def compute
         if superstep >= 1
-          sum = messages.collect(0) {|total,msg| total += msg; total }
+          sum = messages.inject(0) {|total,msg| total += msg; total }
           @value = (0.15 / 3) + 0.85 * sum
         end
 
@@ -47,6 +46,22 @@ describe Coordinator do
         else
           halt
         end
+      end
+    end
+
+    graph = [
+      #                   name     value  out-edges
+      PageRankVertex.new(:igvita,     1,  :wikipedia),
+      PageRankVertex.new(:wikipedia,  1,  :google),
+      PageRankVertex.new(:google,     1,  :igvita)
+    ]
+
+    c = Coordinator.new(graph)
+    c.run
+
+    c.workers.each do |w|
+      w.vertices.each do |v|
+        (v.value * 100).to_i.should == 33
       end
     end
 

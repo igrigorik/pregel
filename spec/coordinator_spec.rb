@@ -32,6 +32,26 @@ describe Coordinator do
     end
   end
 
+  it 'should perform simple PageRank calculation on the graph' do
+    pending
+
+    class PageRankVertex < Vertex
+      def compute(msgs)
+        if superstep >= 1
+          sum = msgs.collect(0) {|total,msg| total += msg; total }
+          @value = (0.15 / 3) + 0.85 * sum
+        end
+
+        if superstep < 30
+          send_to_all_neighbors(@value / neighbors.size)
+        else
+          halt
+        end
+      end
+    end
+
+  end
+
   it 'should parition nodes by hashing the node id'
   it 'should allow scheduling multiple partitions to a single worker'
 end

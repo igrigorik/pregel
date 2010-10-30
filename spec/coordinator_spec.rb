@@ -32,8 +32,7 @@ describe Coordinator do
     end
   end
 
-  it 'should perform simple PageRank calculation on the graph' do
-
+  context 'PageRank' do
     class PageRankVertex < Vertex
       def compute
         if superstep >= 1
@@ -49,22 +48,47 @@ describe Coordinator do
       end
     end
 
-    graph = [
-      #                   name     value  out-edges
-      PageRankVertex.new(:igvita,     1,  :wikipedia),
-      PageRankVertex.new(:wikipedia,  1,  :google),
-      PageRankVertex.new(:google,     1,  :igvita)
-    ]
 
-    c = Coordinator.new(graph)
-    c.run
+    it 'should calculate PageRank of a circular graph' do
+      graph = [
+        #                   name     value  out-edges
+        PageRankVertex.new(:igvita,     1,  :wikipedia),
+        PageRankVertex.new(:wikipedia,  1,  :google),
+        PageRankVertex.new(:google,     1,  :igvita)
+      ]
 
-    c.workers.each do |w|
-      w.vertices.each do |v|
-        (v.value * 100).to_i.should == 33
+      c = Coordinator.new(graph)
+      c.run
+
+      c.workers.each do |w|
+        w.vertices.each do |v|
+          (v.value * 100).to_i.should == 33
+        end
       end
     end
 
+    it 'should calculate PageRank of arbitrary graph' do
+      graph = [
+        # page 1 -> page 1, page 2  (0.18)
+        # page 2 -> page 1, page 3  (0.13)
+        # page 3 -> page 3          (0.69)
+
+        #                   name     value  out-edges
+        PageRankVertex.new(:igvita,     1,  :igvita, :wikipedia),
+        PageRankVertex.new(:wikipedia,  1,  :igvita, :google),
+        PageRankVertex.new(:google,     1,  :google)
+      ]
+
+
+      c = Coordinator.new(graph)
+      c.run
+
+      c.workers.each do |w|
+        (w.vertices.find {|v| v.id == :igvita }.value * 100).ceil.to_i.should == 19
+        (w.vertices.find {|v| v.id == :wikipedia }.value * 100).ceil.to_i.should == 13
+        (w.vertices.find {|v| v.id == :google }.value * 100).to_i.should == 68
+      end
+    end
   end
 
   it 'should parition nodes by hashing the node id'

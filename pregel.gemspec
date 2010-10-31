@@ -6,11 +6,11 @@ Gem::Specification.new do |s|
   s.name        = "pregel"
   s.version     = Pregel::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["TODO: Write your name"]
-  s.email       = ["TODO: Write your email address"]
-  s.homepage    = "http://rubygems.org/gems/pregel"
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.authors     = ["Ilya Grigorik"]
+  s.email       = ["ilya@igvita.com"]
+  s.homepage    = "http://github.com/igrigorik/pregel"
+  s.summary     = "Single-node implementation of Google's Pregel framework for large-scale graph processing."
+  s.description = s.summary
   s.rubyforge_project = "pregel"
 
   s.add_development_dependency "rspec", '~> 2.0.0'

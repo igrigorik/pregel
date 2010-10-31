@@ -1,6 +1,6 @@
 # Pregel
 
-A single-node implementation of Google's Pregel framework for large-scale graph processing. It does not provide any of the distributed components, but implements the core functional pieces within a single Ruby VM such that you can develop and run iterative graph algorithms as if you had the full power of Pregel at your disposal.
+Single-node implementation of Google's Pregel framework for large-scale graph processing. It does not provide any of the distributed components, but implements the core functional pieces within a single Ruby VM such that you can develop and run iterative graph algorithms as if you had the full power of Pregel at your disposal.
 
 To learn more about Pregel see following resources:
 
@@ -27,6 +27,9 @@ To run a PageRank computation on an arbitrary graph, you simply specify the vert
     end
 
 The above algorithm will run for 30 iterations, at which point all vertices will mark themselves as inactive and the coordinator will terminate our computation.
+
+ * [Computing PageRank for a simple circular graph](https://github.com/igrigorik/pregel/blob/master/spec/coordinator_spec.rb#L52)
+ * [Computing PageRank for a more complex grap](https://github.com/igrigorik/pregel/blob/master/spec/coordinator_spec.rb#L70)
 
 # License
 

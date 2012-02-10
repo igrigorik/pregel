@@ -11,20 +11,22 @@ To learn more about Pregel see following resources:
 # PageRank example with Pregel
 To run a PageRank computation on an arbitrary graph, you simply specify the vertices & edges, and then define a compute function for each vertex. The coordinator then partitions the work between a specified number of workers (Ruby threads, in our case), and iteratively executes "supersteps" until we converge on a result. At each superstep, the vertex can read and process incoming messages and then send messages to other vertices. Hence, the full PageRank implementation is:
 
-    class PageRankVertex < Vertex
-      def compute
-        if superstep >= 1
-          sum = messages.inject(0) {|total,msg| total += msg; total }
-          @value = (0.15 / num_nodes) + 0.85 * sum
-        end
-
-        if superstep < 30
-          deliver_to_all_neighbors(@value / neighbors.size)
-        else
-          halt
-        end
-      end
+```ruby
+class PageRankVertex < Vertex
+  def compute
+    if superstep >= 1
+      sum = messages.inject(0) {|total,msg| total += msg; total }
+      @value = (0.15 / num_nodes) + 0.85 * sum
     end
+
+    if superstep < 30
+      deliver_to_all_neighbors(@value / neighbors.size)
+    else
+      halt
+    end
+  end
+end
+```
 
 The above algorithm will run for 30 iterations, at which point all vertices will mark themselves as inactive and the coordinator will terminate our computation.
 
